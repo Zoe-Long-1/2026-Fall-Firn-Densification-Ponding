@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Firn meltwater model</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>Firn meltwater model</h1>
+      <p class="tagline">When does firn stop absorbing meltwater and start ponding it?</p>
+    </div>
+    <nav>
+      <a href="#about">About the model</a>
+      <a id="repo-link" href="https://github.com/">Source code and verification</a>
+    </nav>
+  </header>
+
+  <main>
+    <aside id="controls">
+      <section>
+        <h2>Scenarios</h2>
+        <div id="presets" class="preset-list"></div>
+      </section>
+      <div id="control-groups"></div>
+      <button id="run-button" type="button">Run simulation</button>
+      <div class="progress"><div id="progress-bar"></div></div>
+      <p id="status" class="status">Starting Python…</p>
+    </aside>
+
+    <section id="results">
+      <div id="summary" class="tiles"></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Depth profiles</h2>
+          <div class="time-control">
+            <label for="time-slider">Time</label>
+            <input id="time-slider" type="range" min="0" max="0" value="0" step="1">
+            <span id="time-label">–</span>
+          </div>
+        </div>
+        <div class="profiles">
+          <div id="plot-T" class="plot profile"></div>
+          <div id="plot-rho" class="plot profile"></div>
+          <div id="plot-water" class="plot profile"></div>
+        </div>
+        <p class="caption">Solid: selected time. Dashed grey: initial state. The dotted line on the density plot is the
+          impermeable density; firn denser than this blocks meltwater.</p>
+      </div>
+
+      <div class="panel">
+        <h2>Surface water</h2>
+        <div id="plot-water-series" class="plot series"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Firn storage capacity</h2>
+        <div id="plot-firn-series" class="plot series"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Annual water budget</h2>
+        <div id="plot-annual" class="plot series"></div>
+      </div>
+
+      <div class="panel">
+        <h2>Climate forcing</h2>
+        <div id="plot-forcing" class="plot series"></div>
+      </div>
+
+      <div class="panel" id="about">
+        <h2>About the model</h2>
+        <p>A one-dimensional column of firn (compacting snow on an ice sheet) is forced by a seasonal air
+          temperature. The model solves the <strong>heat equation</strong></p>
+        <p class="equation">&rho; c &part;T/&part;t = &part;/&part;z ( k(&rho;) &part;T/&part;z ) + L R</p>
+        <p>with the Crank&ndash;Nicolson finite-volume method on layers that move down as new snow is buried.
+          The surface temperature is the air temperature capped at 0&nbsp;&deg;C (or 0&nbsp;&deg;C while a pond
+          exists); the base has zero heat flux. Coupled to the heat equation:</p>
+        <ul>
+          <li><strong>Densification</strong> (Herron and Langway, 1980): each layer compacts at a rate that
+            increases with temperature and accumulation.</li>
+          <li><strong>Melt</strong>: a degree-day model melts the surface when the air is above 0&nbsp;&deg;C.</li>
+          <li><strong>Percolation and refreezing</strong>: meltwater moves down layer by layer, refreezing
+            where the firn is cold. Refreezing releases latent heat (the L&nbsp;R term) and adds ice.</li>
+          <li><strong>Perched water and ponds</strong>: layers denser than the impermeable density block
+            water, which fills the firn above them. When that water reaches the surface, a pond forms and
+            drains at the runoff rate.</li>
+        </ul>
+        <p>Python runs in your browser through Pyodide; nothing is sent to a server. The verification
+          notebook in the repository compares the heat solver with the analytical solution for a seasonal
+          temperature wave.</p>
+      </div>
+    </section>
+  </main>
+
+  <script src="main.js"></script>
+</body>
+</html>

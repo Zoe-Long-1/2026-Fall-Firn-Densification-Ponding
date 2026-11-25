@@ -1,0 +1,9 @@
+# Standalone simulation, tests, example and verification notebook.
+# Tested with Python 3.13, numpy 2.5.3, matplotlib 3.11.2.
+# (The browser app uses Pyodide 0.29.5, which provides numpy 2.2.5; see README.)
+numpy>=1.26
+matplotlib>=3.8
+notebook>=7.0
+ipykernel>=6.0
+nbconvert>=7.0
+pytest>=7.0
