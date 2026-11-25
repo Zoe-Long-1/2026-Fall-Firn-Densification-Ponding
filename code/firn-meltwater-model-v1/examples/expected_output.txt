@@ -1,0 +1,9 @@
+Default scenario: T_mean = -16.0 degC, warming = 1.0 degC/decade, 40 years
+Total surface melt            8.91 m w.e.
+Refrozen in the firn          63.4 % of melt
+Runoff                        36.6 % of melt
+First surface pond        year 27
+Deepest pond                  0.20 m
+Ice in upper 10 m (end)       3.73 m
+Firn air content             11.24 -> 6.30 m
+Water mass balance error   6.1e-16 (relative)
