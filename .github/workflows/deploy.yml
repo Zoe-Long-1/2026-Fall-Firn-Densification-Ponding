@@ -27,22 +27,29 @@ jobs:
       - name: Run tests
         run: pytest -q tests
 
-  deploy:
+  build:
     needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Assemble the static site
+        # The web interface plus the Python package, which the Web Worker
+        # downloads and runs in the browser with Pyodide.
+        run: |
+          mkdir -p _site/firnmodel
+          cp -r web/. _site/
+          cp firnmodel/*.py _site/firnmodel/
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: _site
+
+  deploy:
+    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/configure-pages@v5
-      - name: Assemble the static site
-        run: |
-          mkdir -p _site/firnmodel
-          cp -r web/. _site/
-          cp firnmodel/*.py _site/firnmodel/
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: _site
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
